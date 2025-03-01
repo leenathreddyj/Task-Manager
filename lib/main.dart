@@ -1,4 +1,6 @@
+//Venkata Saileenath Reddy Jampala
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart'; // Ensure you have this package installed using `flutter pub add google_fonts`
 
 void main() {
   runApp(const TaskManagerApp());
@@ -20,10 +22,11 @@ class TaskManagerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Task Manager',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        primarySwatch: Colors.deepPurple,
+        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       home: const TaskListScreen(),
     );
@@ -76,8 +79,12 @@ class TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Task Manager'),
+        backgroundColor: Colors.deepPurpleAccent,
+        title: const Text('Task Manager', style: TextStyle(fontWeight: FontWeight.bold)),
+        
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever, color: Colors.white),
@@ -93,72 +100,88 @@ class TaskListScreenState extends State<TaskListScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _taskController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter task',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+            Material(
+              elevation: 5,
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _taskController,
+                        decoration: InputDecoration(
+                          labelText: 'Enter task',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    DropdownButton<String>(
+                      value: _selectedPriority,
+                      items: _priorities.map((String priority) {
+                        return DropdownMenuItem<String>(
+                          value: priority,
+                          child: Text(priority),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedPriority = value!;
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 10),
+                    FloatingActionButton(
+                      backgroundColor: Colors.deepPurpleAccent,
+                      
+                      
+                      onPressed: _addTask,
+                      child: const Icon(Icons.add, color: Colors.white),
+                      
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                DropdownButton<String>(
-                  value: _selectedPriority,
-                  items: _priorities.map((String priority) {
-                    return DropdownMenuItem<String>(
-                      value: priority,
-                      child: Text(priority),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedPriority = value!;
-                    });
-                  },
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _addTask,
-                  child: const Text('Add'),
-                ),
-              ],
+              ),
             ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 itemCount: _tasks.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 5,
-                    child: ListTile(
-                      leading: Checkbox(
-                        value: _tasks[index].isCompleted,
-                        onChanged: (value) => _toggleCompletion(index),
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      title: Text(
-                        _tasks[index].name,
-                        style: TextStyle(
-                          decoration: _tasks[index].isCompleted
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                          fontWeight: FontWeight.bold,
+                      elevation: 5,
+                      child: ListTile(
+                        leading: Checkbox(
+                          value: _tasks[index].isCompleted,
+                          onChanged: (value) => _toggleCompletion(index),
                         ),
-                      ),
-                      subtitle: Text(
-                        'Priority: ${_tasks[index].priority}\nAdded: ${_tasks[index].createdAt.toLocal()}'.split('.')[0],
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _removeTask(index),
+                        title: Text(
+                          _tasks[index].name,
+                          style: TextStyle(
+                            decoration: _tasks[index].isCompleted
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Priority: ${_tasks[index].priority}\nAdded: ${_tasks[index].createdAt.toLocal()}'.split('.')[0],
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _removeTask(index),
+                        ),
                       ),
                     ),
                   );
