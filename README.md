@@ -1,16 +1,56 @@
-# cw3
+Task Manager App
 
-A new Flutter project.
+Overview
 
-## Getting Started
+This is a simple yet elegant Task Manager App built using Flutter. The app allows users to add, manage, and prioritize tasks with an intuitive UI.
 
-This project is a starting point for a Flutter application.
+Features
 
-A few resources to get you started if this is your first Flutter project:
+Add new tasks with a task name and priority level (High, Medium, Low).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Mark tasks as completed using a checkbox.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Delete individual tasks or clear all tasks at once.
+
+Tasks are sorted by priority automatically.
+
+Beautiful and modern UI with floating elements and animations.
+
+Uses Google Fonts for a polished design.
+
+Technologies Used
+
+Flutter for front-end development
+
+Dart for logic and state management
+
+Material Design components for UI
+
+Google Fonts (Poppins) for typography
+
+Installation
+
+Clone this repository:
+
+git clone https://github.com/leenathreddyj/Task-Manager
+cd task-manager
+
+Install dependencies:
+
+flutter pub get
+
+Run the application:
+
+flutter run
+
+Screenshots
+
+(Include screenshots of the UI here for better presentation)
+
+Contribution
+
+Feel free to contribute by opening issues or submitting pull requests.
+
+License
+
+© 2025 Venkata Saileenath Reddy Jampala
