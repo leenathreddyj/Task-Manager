@@ -8,8 +8,10 @@ class Task {
   String name;
   bool isCompleted;
   String priority;
+  DateTime createdAt;
 
-  Task({required this.name, this.isCompleted = false, required this.priority});
+  Task({required this.name, this.isCompleted = false, required this.priority})
+      : createdAt = DateTime.now();
 }
 
 class TaskManagerApp extends StatelessWidget {
@@ -21,6 +23,7 @@ class TaskManagerApp extends StatelessWidget {
       title: 'Task Manager',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const TaskListScreen(),
     );
@@ -73,7 +76,19 @@ class TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Task Manager')),
+      appBar: AppBar(
+        title: const Text('Task Manager'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_forever, color: Colors.white),
+            onPressed: () {
+              setState(() {
+                _tasks.clear();
+              });
+            },
+          )
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -83,7 +98,12 @@ class TaskListScreenState extends State<TaskListScreen> {
                 Expanded(
                   child: TextField(
                     controller: _taskController,
-                    decoration: const InputDecoration(labelText: 'Enter task'),
+                    decoration: InputDecoration(
+                      labelText: 'Enter task',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -114,6 +134,10 @@ class TaskListScreenState extends State<TaskListScreen> {
                 itemCount: _tasks.length,
                 itemBuilder: (context, index) {
                   return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    elevation: 5,
                     child: ListTile(
                       leading: Checkbox(
                         value: _tasks[index].isCompleted,
@@ -125,9 +149,13 @@ class TaskListScreenState extends State<TaskListScreen> {
                           decoration: _tasks[index].isCompleted
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text('Priority: ${_tasks[index].priority}'),
+                      subtitle: Text(
+                        'Priority: ${_tasks[index].priority}\nAdded: ${_tasks[index].createdAt.toLocal()}'.split('.')[0],
+                        style: TextStyle(fontSize: 12),
+                      ),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () => _removeTask(index),
